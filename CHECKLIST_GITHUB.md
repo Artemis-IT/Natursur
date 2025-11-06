@@ -1,5 +1,8 @@
 # 📦 CHECKLIST - Para subir a GitHub
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## ✅ Archivos que DEBEN estar en el repositorio
 
 ```

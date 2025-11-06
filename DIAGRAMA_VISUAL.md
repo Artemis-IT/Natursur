@@ -1,5 +1,8 @@
 # 🎨 DIAGRAMA: Todo lo que tu Equipo Necesita
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## 📊 Visualización Completa
 
 ```

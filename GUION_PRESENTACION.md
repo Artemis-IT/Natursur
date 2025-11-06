@@ -1,5 +1,8 @@
 # 📢 Guión de Presentación para el Equipo
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## Cuando Compartas el Enlace de GitHub
 
 ### Opción 1: Presentación Rápida (2 minutos)

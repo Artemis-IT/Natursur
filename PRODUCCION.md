@@ -1,5 +1,8 @@
 # 🔧 Configuración para Producción
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## Cambios necesarios antes de desplegar
 
 ### 1. settings.py - Seguridad

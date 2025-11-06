@@ -2,6 +2,9 @@
 
 **Proyecto PGPI** - Plataforma web profesional para gestión de citas y servicios de nutrición.
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur. 
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ![Versión](https://img.shields.io/badge/versión-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.9+-green)
 ![Django](https://img.shields.io/badge/Django-5.2.6-darkgreen)

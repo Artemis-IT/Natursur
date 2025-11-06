@@ -1,5 +1,8 @@
 # 🚀 TARJETA RÁPIDA - Para Compartir Directamente
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## Si Tu Equipo Te Pregunta: "¿Qué Necesito?"
 
 ### ✅ RESPUESTA CORTA (30 segundos)

@@ -1,5 +1,8 @@
 # 📋 RESUMEN: Lo que tu Equipo Necesita para Ejecutar el Proyecto
 
+**Elaborado por:** Antonio Luis Jiménez de la Fuente (Project Manager) y el Equipo de Proyecto Natursur.  
+**Tech Lead (desarrollo web):** Alejandro Vela Molina.
+
 ## ✅ Lo que hemos preparado
 
 Tu proyecto está **100% listo para GitHub**. Hemos creado:
