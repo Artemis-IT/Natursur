@@ -8,6 +8,7 @@ from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -109,6 +110,16 @@ class AppointmentForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'input'}),
             'email': forms.EmailInput(attrs={'class': 'input'}),
         }
+
+    def clean_datetime(self):
+        """Ensure the selected datetime is in the future (server-side validation)."""
+        dt = self.cleaned_data.get('datetime')
+        if dt:
+            # Compare with current time (timezone-aware)
+            now = timezone.now()
+            if dt < now:
+                raise ValidationError('La fecha y hora deben ser en el futuro.')
+        return dt
 
 
 class LoginForm(forms.Form):
