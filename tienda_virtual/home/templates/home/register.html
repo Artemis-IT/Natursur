@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrarse - {{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1 class="logo">{{ site_name }}</h1>
+        <nav class="nav">
+          <a href="{% url 'home:index' %}">Inicio</a>
+          <a href="{% url 'home:citas_list' %}">Citas</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-content">
+      <h2>Crear cuenta</h2>
+      {% if messages %}
+        <div style="margin-bottom:1rem">
+          {% for message in messages %}
+            <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52;margin-bottom:0.4rem">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" class="contact-form" style="max-width:560px">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div style="color:#b00020;margin-bottom:0.6rem">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label>Nombre</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+
+        <label>Apellidos</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+
+        <label>Correo</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+
+        <label>Contraseña</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+
+        <label>Confirmar contraseña</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+
+        <label>Pregunta de seguridad</label>
+        {{ form.security_question }}
+        {{ form.security_question.errors }}
+
+        <label>Respuesta</label>
+        {{ form.security_answer }}
+        {{ form.security_answer.errors }}
+
+        <div style="margin-top:0.6rem">
+          <button type="submit" class="btn primary">Crear cuenta</button>
+          <a class="btn" href="{% url 'home:index' %}" style="margin-left:0.6rem">Cancelar</a>
+        </div>
+      </form>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p class="powered">Powered by Artemis IT</p>
+      </div>
+    </footer>
+  </body>
+  </html>

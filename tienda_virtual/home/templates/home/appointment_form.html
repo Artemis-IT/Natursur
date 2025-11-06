@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nueva cita - {{ site_name }}</title>
+  <!-- Google Fonts: Montserrat Medium -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1 class="logo">{{ site_name }}</h1>
+        <nav class="nav">
+          <a href="{% url 'home:index' %}">Inicio</a>
+          <a href="{% url 'home:citas_list' %}">Citas</a>
+          {% if user.is_authenticated %}
+            <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">{{ user.first_name }}</span>
+            <a href="{% url 'home:logout' %}" style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">Cerrar sesión</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-content">
+      <h2>Agendar nueva cita</h2>
+      <form method="post" class="contact-form" style="max-width:560px">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label>Nombre</label>
+        {{ form.name }}
+        <label>Correo</label>
+        {{ form.email }}
+        <label>Fecha y hora</label>
+        {{ form.datetime }}
+        <label>Notas</label>
+        {{ form.notes }}
+        <div style="margin-top:0.6rem">
+          <button type="submit" class="btn primary">Guardar cita</button>
+          <a class="btn" href="{% url 'home:citas_list' %}" style="margin-left:0.6rem">Cancelar</a>
+        </div>
+      </form>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p class="powered">Powered by Artemis IT</p>
+      </div>
+    </footer>
+  </body>
+  </html>

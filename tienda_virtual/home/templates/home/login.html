@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesión - {{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1 class="logo">{{ site_name }}</h1>
+        <nav class="nav">
+          <a href="{% url 'home:index' %}">Inicio</a>
+          <a href="{% url 'home:register' %}">Registrarse</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-content">
+      <h2>Iniciar sesión</h2>
+      {% if messages %}
+        <div style="margin-bottom:1rem">
+          {% for message in messages %}
+            <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52;margin-bottom:0.4rem">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" class="contact-form" style="max-width:560px">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div style="color:#b00020;margin-bottom:0.6rem">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label>Correo</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+
+        <label>Elige cómo iniciar sesión</label>
+        <div style="margin:0.6rem 0;padding:0.6rem;border:1px solid rgba(0,0,0,0.06);border-radius:6px">
+          {% for radio in form.login_method %}
+            <div style="margin-bottom:0.4rem">
+              {{ radio.tag }}
+              <label for="{{ radio.id_for_label }}" style="display:inline;margin-left:0.4rem">{{ radio.choice_label }}</label>
+            </div>
+          {% endfor %}
+        </div>
+        {{ form.login_method.errors }}
+
+        <label>Contraseña (si elegiste email+contraseña)</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+
+        <label>Respuesta de seguridad (si elegiste pregunta)</label>
+        {{ form.security_answer }}
+        {{ form.security_answer.errors }}
+
+        <div style="margin-top:0.6rem">
+          <button type="submit" class="btn primary">Iniciar sesión</button>
+          <a class="btn" href="{% url 'home:index' %}" style="margin-left:0.6rem">Cancelar</a>
+        </div>
+        <p style="margin-top:1rem;color:#6b6b6b">¿No tienes cuenta? <a href="{% url 'home:register' %}" style="color:var(--accent)">Regístrate aquí</a></p>
+      </form>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p class="powered">Powered by Artemis IT</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ site_name }} - Inicio</title>
+    <!-- Google Fonts: Montserrat Medium para toda la página -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700">NS</div>
+                <h1 class="logo">{{ site_name }}</h1>
+            </div>
+                        <nav class="nav">
+                <a href="#beneficios">Beneficios</a>
+                <a href="#productos">Productos</a>
+                <a href="{% url 'home:citas_list' %}">Citas</a>
+                <a href="#contacto">Contacto</a>
+                {% if user.is_authenticated %}
+                  <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">{{ user.first_name }}</span>
+                  <a href="{% url 'home:logout' %}" style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">Cerrar sesión</a>
+                {% else %}
+                  <a href="{% url 'home:login' %}" style="margin-left:1rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">Iniciar sesión</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+        {% if messages %}
+            <div class="container" style="margin-top:0.6rem">
+                {% for message in messages %}
+                    <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52;margin-bottom:0.4rem">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    <section class="hero">
+        <div class="container inner">
+            <div>
+                <h2 class="tagline">{{ tagline }}</h2>
+                <p class="lead">Cuidamos tu alimentación con recetas, asesoría y productos naturales pensados para tu bienestar. Descubre planes y productos pensados para una vida sana.</p>
+                <a class="cta" href="#contacto">Empieza ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <main class="container main-content">
+        <section id="beneficios" class="features">
+            <h3>¿Por qué elegir {{ site_name }}?</h3>
+            <div class="cards">
+                {% for f in features %}
+                <article class="card">
+                    <h4>{{ f.title }}</h4>
+                    <p>{{ f.desc }}</p>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="productos" class="products">
+            <h3>Productos destacados</h3>
+            <div class="product-grid">
+                {% for p in products %}
+                <div class="product">
+                    <div class="product-thumb" aria-hidden>🍃</div>
+                    <h4>{{ p.name }}</h4>
+                    <p class="price">{{ p.price }}</p>
+                    <a class="btn primary" href="#contacto">Comprar</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="contacto" class="contact">
+            <h3>Contacto</h3>
+            <p>Escríbenos para agendar una asesoría o para más información sobre nuestros productos.</p>
+            <form class="contact-form" action="#" method="post">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Tu nombre" required />
+                <input type="email" name="email" placeholder="Tu correo" required />
+                <textarea name="message" placeholder="Tu mensaje" rows="4"></textarea>
+                <button class="btn primary" type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ site_name }} - Todos los derechos reservados</p>
+            <p class="powered">Powered by Artemis IT</p>
+        </div>
+    </footer>
+
+</body>
+</html>
