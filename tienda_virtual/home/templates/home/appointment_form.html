@@ -35,7 +35,9 @@
         <label>Correo</label>
         {{ form.email }}
         <label>Fecha y hora</label>
-        {{ form.datetime }}
+        <div class="datetime-container">
+          {{ form.datetime }}
+        </div>
         <label>Notas</label>
         {{ form.notes }}
         <div style="margin-top:0.6rem">
@@ -48,6 +50,33 @@
     <footer class="site-footer">
       <div class="container">
         <p class="powered">Powered by Artemis IT</p>
+      </div>
+    </footer>
+
+    <!-- Flatpickr CSS & JS (CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr Spanish locale (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+    <script>
+      // Initialize flatpickr on elements with class 'datetimepicker'
+      document.addEventListener('DOMContentLoaded', function () {
+        const elems = document.querySelectorAll('.datetimepicker');
+        elems.forEach(function(el) {
+          flatpickr(el, {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            altInput: true,
+            altFormat: "d/m/Y H:i",
+            time_24hr: true,
+            minuteIncrement: 15,
+            locale: 'es',
+            // minDate: "today", // optional: prevent past dates
+          });
+        });
+      });
+    </script>
       </div>
     </footer>
   </body>

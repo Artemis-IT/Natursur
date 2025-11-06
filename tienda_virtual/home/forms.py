@@ -103,7 +103,8 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['name', 'email', 'datetime', 'notes']
         widgets = {
-            'datetime': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'input'}),
+            # Use a text input that will be enhanced by a JS datetime picker (flatpickr)
+            'datetime': forms.TextInput(attrs={'class': 'input datetimepicker', 'autocomplete': 'off', 'placeholder': 'YYYY-MM-DD HH:MM'}),
             'notes': forms.Textarea(attrs={'rows': 4}),
             'name': forms.TextInput(attrs={'class': 'input'}),
             'email': forms.EmailInput(attrs={'class': 'input'}),
