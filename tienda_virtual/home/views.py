@@ -3,6 +3,11 @@ from django.shortcuts import render
 
 def index(request):
 	"""Vista para la pantalla de inicio (landing page) de Natursur."""
+	from .models import Product
+	
+	# Obtener 3 productos aleatorios de Herbalife para destacados
+	featured_products = Product.objects.filter(is_active=True).order_by('?')[:3]
+	
 	context = {
 		'site_name': 'Natursur',
 		'tagline': 'Nutrición natural para tu bienestar',
@@ -11,11 +16,7 @@ def index(request):
 			{'title': 'Productos naturales', 'desc': 'Suplementos y alimentos orgánicos seleccionados con calidad.'},
 			{'title': 'Recetas saludables', 'desc': 'Ideas fáciles y nutritivas para tu día a día.'},
 		],
-		'products': [
-			{'name': 'Aceite de lino', 'price': '$8.99'},
-			{'name': 'Granola artesanal', 'price': '$5.50'},
-			{'name': 'Polvo proteico vegano', 'price': '$15.00'},
-		]
+		'featured_products': featured_products,
 	}
 	return render(request, 'home/index.html', context)
 
@@ -127,4 +128,25 @@ def logout_view(request):
     auth_logout(request)
     messages.success(request, 'Has cerrado sesión.')
     return redirect('home:index')
+
+
+def products_list(request):
+    """Muestra el catálogo de productos de Herbalife con enlace a la web oficial."""
+    from .models import Product
+    
+    # Obtener parámetro de búsqueda (opcional)
+    search_query = request.GET.get('q', '').strip()
+    
+    products = Product.objects.filter(is_active=True)
+    
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+    
+    context = {
+        'products': products,
+        'search_query': search_query,
+        'site_name': 'Natursur',
+        'total_products': products.count()
+    }
+    return render(request, 'home/products.html', context)
 

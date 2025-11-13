@@ -35,3 +35,23 @@ class SecurityProfile(models.Model):
 		from django.contrib.auth.hashers import check_password
 		return check_password(raw_answer, self.answer)
 
+
+class Product(models.Model):
+	"""Modelo para productos de Herbalife obtenidos mediante scraping."""
+	name = models.CharField(max_length=255)
+	herbalife_url = models.URLField(max_length=500, unique=True)
+	image_url = models.URLField(max_length=500, blank=True, null=True)
+	description = models.TextField(blank=True)
+	category = models.CharField(max_length=100, blank=True)
+	is_active = models.BooleanField(default=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ['name']
+		verbose_name = 'Producto Herbalife'
+		verbose_name_plural = 'Productos Herbalife'
+
+	def __str__(self):
+		return self.name
+
