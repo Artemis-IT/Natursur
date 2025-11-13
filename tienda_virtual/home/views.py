@@ -87,9 +87,8 @@ def login_view(request):
             # buscar usuario por email
             from django.contrib.auth import get_user_model
             User = get_user_model()
-            try:
-                user = User.objects.get(email__iexact=email)
-            except User.DoesNotExist:
+            user = User.objects.filter(email__iexact=email).first()
+            if not user:
                 messages.error(request, 'Usuario no encontrado.')
                 return render(request, 'home/login.html', {'form': form, 'site_name': 'Natursur'})
             
