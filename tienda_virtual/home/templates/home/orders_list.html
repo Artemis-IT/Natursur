@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos - {{ site_name }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+    <style>
+        .orders-header{text-align:center;padding:2rem 1rem;background:linear-gradient(90deg,var(--accent),var(--accent-dark));color:#fff}
+        .orders-header h1{margin:0;font-size:2.5rem}
+        .orders-container{max-width:1200px;margin:2rem auto;padding:0 1.5rem}
+        .orders-empty{text-align:center;padding:4rem 2rem;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+        .orders-grid{display:grid;gap:1.5rem}
+        .order-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:2rem;transition:transform 0.3s}
+        .order-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+        .order-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid #f0f0f0}
+        .order-id{font-size:1.5rem;font-weight:700;color:#333}
+        .order-date{color:#666;font-size:0.9rem;margin-top:0.25rem}
+        .status-badge{display:inline-block;padding:0.5rem 1rem;border-radius:20px;font-weight:600;font-size:0.9rem}
+        .status-pending{background:#fff3cd;color:#856404}
+        .status-processing{background:#cce5ff;color:#004085}
+        .status-completed{background:#d4edda;color:#155724}
+        .status-cancelled{background:#f8d7da;color:#721c24}
+        .order-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:1.5rem}
+        .info-item{display:flex;flex-direction:column}
+        .info-label{font-weight:600;color:#666;font-size:0.85rem;margin-bottom:0.25rem}
+        .info-value{color:#333;font-size:1rem}
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 1rem;
+        }
+        .product-mini {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+        }
+        .product-mini-icon {
+            background: #e0ffe5;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-size: 1.2rem;
+        }
+        .product-mini-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.2;
+            max-height: 2.4em;
+            overflow: hidden;
+        }
+        .product-mini-quantity {
+            font-size: 0.75rem;
+            color: #444;
+        }
+        /* --- FIN NUEVO --- */
+
+        .order-summary{padding-top:1rem;margin-top:1rem;border-top:1px solid #ececec}
+        @media (max-width:768px){
+            .order-header{flex-direction:column;gap:1rem}
+            .order-info{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700">NS</div>
+                <h1 class="logo">{{ site_name }}</h1>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'home:index' %}">Inicio</a>
+                <a href="{% url 'home:products_list' %}">Productos</a>
+                <a href="{% url 'home:cart_detail' %}">🛒 Carrito</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
+                    <a href="{% url 'home:citas_list' %}">Citas</a>
+                    <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">{{ user.first_name }}</span>
+                    <a href="{% url 'home:logout' %}" style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'home:login' %}" style="margin-left:1rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px">Iniciar sesión</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <div class="orders-header">
+        <h1>📦 Mis Pedidos</h1>
+        <p>Historial completo de tus pedidos</p>
+    </div>
+
+    <div class="orders-container">
+        <a href="{% url 'home:products_list' %}" class="btn primary" style="margin-bottom:2rem">← Volver a productos</a>
+        
+        {% if orders %}
+        <div class="orders-grid">
+
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Pedido #{{ order.id }}</div>
+                        <div class="order-date">{{ order.created_at|date:"d/m/Y" }} a las {{ order.created_at|time:"H:i" }}</div>
+                    </div>
+                    <div>
+                        {% if order.status == 'pending' %}
+                        <span class="status-badge status-pending">⏳ Pendiente</span>
+                        {% elif order.status == 'processing' %}
+                        <span class="status-badge status-processing">🔄 En proceso</span>
+                        {% elif order.status == 'completed' %}
+                        <span class="status-badge status-completed">✅ Completado</span>
+                        {% elif order.status == 'cancelled' %}
+                        <span class="status-badge status-cancelled">❌ Cancelado</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="order-info">
+                    <div class="info-item">
+                        <span class="info-label">Cliente</span>
+                        <span class="info-value">{{ order.customer_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ciudad de entrega</span>
+                        <span class="info-value">{{ order.delivery_city }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total productos</span>
+                        <span class="info-value">{{ order.items.count }} diferente(s)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total unidades</span>
+                        <span class="info-value">{{ order.get_total_items }}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>📦 Productos:</strong>
+                    <div class="products-grid">
+                        {% for item in order.items.all %}
+                        <div class="product-mini">
+                            <div class="product-mini-icon">🌱</div>
+                            <div class="product-mini-name">{{ item.product_name }}</div>
+                            <div class="product-mini-quantity">x {{ item.quantity }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <a href="{% url 'home:order_detail' order.id %}" class="btn primary" style="margin-top:1rem">Ver detalles →</a>
+            </div>
+
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="orders-empty">
+            <h2>Aún no tienes pedidos</h2>
+            <p>Cuando realices un pedido, aparecerá aquí</p>
+            <a href="{% url 'home:products_list' %}" class="cta" style="margin-top:1.5rem">Explorar productos</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ site_name }} - Todos los derechos reservados</p>
+        </div>
+    </footer>
+</body>
+</html>

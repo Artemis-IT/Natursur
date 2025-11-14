@@ -17,28 +17,42 @@
                 <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700">NS</div>
                 <h1 class="logo">{{ site_name }}</h1>
             </div>
-                        <nav class="nav">
-                <a href="#beneficios">Beneficios</a>
-                <a href="#productos">Productos</a>
-                <a href="{% url 'home:products_list' %}">Catálogo Herbalife</a>
-                <a href="{% url 'home:citas_list' %}">Citas</a>
-                <a href="#contacto">Contacto</a>
+            <nav class="nav">
+                <a href="{% url 'home:index' %}">Inicio</a>
+                <a href="{% url 'home:products_list' %}">Productos</a>
+                <a href="{% url 'home:cart_detail' %}">🛒 Carrito</a>
+
                 {% if user.is_authenticated %}
-                  <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">{{ user.first_name }}</span>
-                  <a href="{% url 'home:logout' %}" style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">Cerrar sesión</a>
+                    <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
+                    <a href="{% url 'home:citas_list' %}">Citas</a>
+
+                    <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">
+                        {{ user.first_name }}
+                    </span>
+
+                    <a href="{% url 'home:logout' %}"
+                       style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">
+                       Cerrar sesión
+                    </a>
+
                 {% else %}
-                  <a href="{% url 'home:login' %}" style="margin-left:1rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">Iniciar sesión</a>
+                    <a href="{% url 'home:login' %}"
+                       style="margin-left:1rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px;color:#fff;text-decoration:none">
+                       Iniciar sesión
+                    </a>
                 {% endif %}
             </nav>
+
         </div>
     </header>
-        {% if messages %}
-            <div class="container" style="margin-top:0.6rem">
-                {% for message in messages %}
-                    <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52;margin-bottom:0.4rem">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
+
+    {% if messages %}
+        <div class="container" style="margin-top:0.6rem">
+            {% for message in messages %}
+                <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52;margin-bottom:0.4rem">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <section class="hero">
         <!-- Carrusel de fondo -->
@@ -65,8 +79,7 @@
         </div>
     </section>
 
-    <script>
-        // Auto-rotate background slides
+    <script defer>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         
@@ -76,7 +89,7 @@
             slides[currentSlide].classList.add('active');
         }
         
-        setInterval(nextSlide, 4000); // Cambia cada 4 segundos
+        setInterval(nextSlide, 4000);
     </script>
 
     <main class="container main-content">

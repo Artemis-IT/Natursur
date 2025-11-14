@@ -160,3 +160,63 @@ class LoginForm(forms.Form):
             self.add_error('security_answer', 'La respuesta es obligatoria si eliges este método.')
 
         return cleaned_data
+    
+    
+class CheckoutForm(forms.Form):
+    """Formulario para completar un pedido."""
+    
+    customer_name = forms.CharField(
+        label='Nombre completo',
+        max_length=200,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Juan Pérez'})
+    )
+    
+    customer_email = forms.EmailField(
+        label='Correo electrónico',
+        widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'juan@ejemplo.com'})
+    )
+    
+    customer_phone = forms.CharField(
+        label='Teléfono de contacto',
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': '+34 600 000 000'})
+    )
+    
+    delivery_address = forms.CharField(
+        label='Dirección de entrega',
+        widget=forms.Textarea(attrs={'class': 'textarea', 'rows': 3, 'placeholder': 'Calle, número, piso, puerta...'})
+    )
+    
+    delivery_city = forms.CharField(
+        label='Ciudad',
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Alcalá de Guadaíra'})
+    )
+    
+    delivery_postal_code = forms.CharField(
+        label='Código postal',
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': '41500'})
+    )
+    
+    notes = forms.CharField(
+        label='Información adicional',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'textarea', 
+            'rows': 4, 
+            'placeholder': 'Instrucciones de entrega, preferencias, etc.'
+        })
+    )
+    
+    def clean_customer_phone(self):
+        """Valida el formato del teléfono si se proporciona."""
+        phone = self.cleaned_data.get('customer_phone')
+        if phone:
+            # Eliminar espacios y guiones
+            phone_cleaned = phone.replace(' ', '').replace('-', '')
+            # Validación básica: debe contener principalmente dígitos
+            if not phone_cleaned.replace('+', '').isdigit():
+                raise ValidationError('Introduce un número de teléfono válido.')
+        return phone

@@ -1,241 +1,138 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos Herbalife - {{ site_name }}</title>
-    {% load static %}
+    <title>Productos - {{ site_name }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .products-header {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: linear-gradient(135deg, #78b657 0%, #5a8f42 100%);
-            color: white;
-        }
-        
-        .products-header h1 {
-            margin: 0 0 1rem 0;
-            font-size: 2.5rem;
-        }
-        
-        .search-container {
-            max-width: 600px;
-            margin: 1.5rem auto 0;
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-        }
-        
-        .search-btn {
-            padding: 0.75rem 2rem;
-            background: #4a7033;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .search-btn:hover {
-            background: #3a5928;
-        }
-        
-        .products-info {
-            text-align: center;
-            padding: 1.5rem;
-            color: #666;
-        }
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-        
-        .product-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            background: #f5f5f5;
-        }
-        
-        .product-image-placeholder {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #999;
-        }
-        
-        .product-info {
-            padding: 1.5rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin: 0 0 1rem 0;
-            line-height: 1.4;
-            flex: 1;
-        }
-        
-        .product-link {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #78b657;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            text-align: center;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .product-link:hover {
-            background: #5a8f42;
-        }
-        
-        .no-products {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #666;
-        }
-        
-        .no-products h2 {
-            color: #999;
-            margin-bottom: 1rem;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin: 2rem;
-            padding: 0.75rem 1.5rem;
-            background: #78b657;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .back-link:hover {
-            background: #5a8f42;
-        }
-        
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
-                padding: 1.5rem;
-            }
-            
-            .products-header h1 {
-                font-size: 2rem;
-            }
-            
-            .search-container {
-                flex-direction: column;
-            }
+        .products-header{text-align:center;padding:2rem 1rem;background:linear-gradient(90deg,var(--accent),var(--accent-dark));color:#fff}
+        .products-header h1{margin:0 0 1rem;font-size:2.5rem}
+        .search-container{max-width:600px;margin:1.5rem auto 0;display:flex;gap:0.5rem}
+        .search-input{flex:1;padding:0.75rem 1rem;border:none;border-radius:25px;font-size:1rem}
+        .search-btn{padding:0.75rem 2rem;background:#237a6a;color:#fff;border:none;border-radius:25px;cursor:pointer;font-weight:600}
+        .search-btn:hover{background:#1a5f52}
+        .products-info{text-align:center;padding:1.5rem;color:#666}
+        .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;padding:2rem;max-width:1400px;margin:0 auto}
+        .product-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);overflow:hidden;transition:transform 0.3s}
+        .product-card:hover{transform:translateY(-5px);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+        .product-image{width:100%;height:250px;object-fit:cover;background:#f5f5f5}
+        .product-placeholder{width:100%;height:250px;background:linear-gradient(135deg,#e0e0e0,#f5f5f5);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#999}
+        .product-info{padding:1.5rem;display:flex;flex-direction:column}
+        .product-name{font-size:1.1rem;font-weight:600;color:#333;margin:0 0 1rem;flex:1}
+        .product-actions{display:flex;flex-direction:column;gap:0.75rem}
+        .add-form{display:flex;gap:0.5rem}
+        .quantity-input{width:60px;padding:0.5rem;border:1px solid #ddd;border-radius:8px;text-align:center}
+        .btn-add{flex:1;padding:0.75rem 1.5rem;background:#28a745;color:#fff;border:none;border-radius:25px;font-weight:600;cursor:pointer}
+        .btn-add:hover{background:#218838}
+        .no-products{text-align:center;padding:4rem 2rem;color:#666}
+        @media (max-width:768px){
+            .products-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;padding:1.5rem}
+            .products-header h1{font-size:2rem}
+            .search-container{flex-direction:column}
         }
     </style>
 </head>
 <body>
+    <header class="site-header">
+        <div class="container">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700">NS</div>
+                <h1 class="logo">{{ site_name }}</h1>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'home:index' %}">Inicio</a>
+                <a href="{% url 'home:products_list' %}">Productos</a>
+                <a href="{% url 'home:cart_detail' %}">🛒 Carrito</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
+                    <a href="{% url 'home:citas_list' %}">Citas</a>
+                    <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">{{ user.first_name }}</span>
+                    <a href="{% url 'home:logout' %}" style="margin-left:0.6rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'home:login' %}" style="margin-left:1rem;padding:0.4rem 0.7rem;background:rgba(255,255,255,0.12);border-radius:8px">Iniciar sesión</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="container" style="margin-top:0.6rem">
+        {% for message in messages %}
+        <div style="padding:0.6rem;border-radius:6px;background:#eef6f5;color:#065f52">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     <div class="products-header">
         <h1>🌿 Productos Herbalife</h1>
         <p>Descubre nuestra selección de productos de nutrición natural</p>
         
         <form method="get" class="search-container">
-            <input 
-                type="text" 
-                name="q" 
-                class="search-input" 
-                placeholder="Buscar productos..." 
-                value="{{ search_query }}"
-            >
+            <input type="text" name="q" class="search-input" placeholder="Buscar productos..." value="{{ search_query }}">
             <button type="submit" class="search-btn">Buscar</button>
         </form>
     </div>
     
     <div class="products-info">
         {% if search_query %}
-            <p>Mostrando <strong>{{ total_products }}</strong> resultado(s) para "<strong>{{ search_query }}</strong>"</p>
+        <p>Mostrando <strong>{{ total_products }}</strong> resultado(s) para "<strong>{{ search_query }}</strong>"</p>
         {% else %}
-            <p>Total de productos disponibles: <strong>{{ total_products }}</strong></p>
+        <p>Total de productos: <strong>{{ total_products }}</strong></p>
         {% endif %}
     </div>
     
     {% if products %}
-        <div class="products-grid">
-            {% for product in products %}
-                <div class="product-card">
-                    {% if product.image_url %}
-                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="product-image-placeholder" style="display:none;">🌱</div>
-                    {% else %}
-                        <div class="product-image-placeholder">🌱</div>
-                    {% endif %}
-                    
-                    <div class="product-info">
-                        <h3 class="product-name">{{ product.name }}</h3>
-                        <a href="{{ product.herbalife_url }}" target="_blank" rel="noopener noreferrer" class="product-link">
-                            Ver en Herbalife →
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="no-products">
-            <h2>No se encontraron productos</h2>
-            {% if search_query %}
-                <p>No hay productos que coincidan con "{{ search_query }}"</p>
-                <a href="{% url 'home:products_list' %}" class="back-link">Ver todos los productos</a>
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="product-placeholder" style="display:none">🌱</div>
             {% else %}
-                <p>Aún no hay productos disponibles. Ejecuta el comando de scraping para cargar productos.</p>
-                <code style="background: #f5f5f5; padding: 0.5rem 1rem; border-radius: 5px; display: inline-block; margin-top: 1rem;">
-                    python manage.py scrape_herbalife
-                </code>
+            <div class="product-placeholder">🌱</div>
             {% endif %}
+            
+            <div class="product-info">
+                <h3 class="product-name">{{ product.name }}</h3>
+                
+                <div class="product-actions">
+                    <form method="post" action="{% url 'home:cart_add' product.id %}" class="add-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
+                        <button type="submit" class="btn-add">🛒 Añadir</button>
+                    </form>
+                    
+                    <a href="{{ product.herbalife_url }}" target="_blank" rel="noopener noreferrer" class="btn primary">Ver en Herbalife →</a>
+                </div>
+            </div>
         </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-products">
+        <h2>No se encontraron productos</h2>
+        {% if search_query %}
+        <p>No hay productos que coincidan con "{{ search_query }}"</p>
+        <a href="{% url 'home:products_list' %}" class="btn primary">Ver todos los productos</a>
+        {% else %}
+        <p>Aún no hay productos disponibles.</p>
+        {% endif %}
+    </div>
     {% endif %}
     
-    <div style="text-align: center; padding-bottom: 2rem;">
-        <a href="{% url 'home:index' %}" class="back-link">← Volver al inicio</a>
+    <div style="text-align:center;padding:2rem">
+        <a href="{% url 'home:index' %}" class="btn primary">← Volver al inicio</a>
     </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ site_name }} - Todos los derechos reservados</p>
+        </div>
+    </footer>
 </body>
 </html>
