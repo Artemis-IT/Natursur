@@ -36,8 +36,7 @@ jobs:
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_USE_TLS: 'True'
         run: |
-          cd tienda_virtual
-          python run_daily_task.py
+          python tienda_virtual/run_daily_task.py
       
       - name: Resultado
         if: always()
