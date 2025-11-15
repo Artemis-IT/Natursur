@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.core.mail import send_mail
-from tienda_virtual.home.models import Order
+from home.models import Order
 
 
 def send_daily_order_summary():
