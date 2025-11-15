@@ -1,10 +1,3 @@
-# # *** ESTA ES LA PARTE IMPORTANTE ***
-# # Añadir la raíz del proyecto al PYTHONPATH
-# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# sys.path.insert(0, PROJECT_ROOT)
-
-from tienda_virtual.home import send_mail
-
 #!/usr/bin/env python
 """Script para ejecutar la tarea diaria de envío de emails"""
 import os
@@ -20,6 +13,9 @@ sys.path.insert(0, BASE_DIR)
 # Configurar Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tienda_virtual.settings')
 django.setup()
+
+# Importar después de configurar Django
+from home import send_mail
 
 
 if __name__ == '__main__':
