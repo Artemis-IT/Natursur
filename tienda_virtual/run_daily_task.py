@@ -1,3 +1,5 @@
+from tienda_virtual.home.send_mail import send_daily_order_summary
+
 #!/usr/bin/env python
 """Script para ejecutar la tarea diaria de envío de emails"""
 import os
@@ -12,8 +14,6 @@ sys.path.insert(0, BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tienda_virtual.settings')
 django.setup()
 
-# Importar la función
-from home.send_mail import send_daily_order_summary
 
 if __name__ == '__main__':
     try:
