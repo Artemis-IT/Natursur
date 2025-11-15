@@ -25,8 +25,8 @@ def send_daily_order_summary():
     send_mail(
         subject=f"Resumen de pedidos del {today}",
         message=body,
-        from_email="dariorojime@gmail.com",
-        recipient_list=["darromjim@alum.us.es"],
+        from_email="antonioluisjf22@gmail.com",
+        recipient_list=["antjimde@alum.us.es"],
     )
     
     return f"Email enviado con {orders_today.count()} pedidos"
