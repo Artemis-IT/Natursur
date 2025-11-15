@@ -4,8 +4,10 @@ import os
 import sys
 import django
 
-# Configurar el path
+# Configurar el path - BASE_DIR es el directorio donde está este script (tienda_virtual/)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Cambiar al directorio base para asegurar que las rutas funcionen
+os.chdir(BASE_DIR)
 sys.path.insert(0, BASE_DIR)
 
 # Configurar Django
