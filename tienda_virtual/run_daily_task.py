@@ -3,7 +3,7 @@
 # PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # sys.path.insert(0, PROJECT_ROOT)
 
-from tienda_virtual.home.send_mail import send_daily_order_summary
+from tienda_virtual.home import send_mail
 
 #!/usr/bin/env python
 """Script para ejecutar la tarea diaria de envío de emails"""
@@ -23,7 +23,7 @@ django.setup()
 if __name__ == '__main__':
     try:
         print("Iniciando envío de resumen diario de pedidos...")
-        result = send_daily_order_summary()
+        result = send_mail.send_daily_order_summary()
         print(f"Tarea completada exitosamente: {result}")
     except Exception as e:
         print(f"Error al ejecutar tarea: {e}")
