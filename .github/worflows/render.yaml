@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: tienda-virtual
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
+    startCommand: gunicorn tienda_virtual.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tienda-virtual-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+
+databases:
+  - name: tienda-virtual-db
+    databaseName: tienda_virtual
+    user: tienda_virtual_user
+    plan: free
