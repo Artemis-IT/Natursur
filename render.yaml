@@ -3,6 +3,7 @@ services:
     name: tienda-virtual
     runtime: python
     plan: free
+    rootDir: tienda_virtual  # ← AÑADE ESTA LÍNEA
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
     startCommand: gunicorn tienda_virtual.wsgi:application
     envVars:
