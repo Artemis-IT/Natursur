@@ -18,7 +18,7 @@ services:
       - key: DEBUG
         value: False
       - key: ALLOWED_HOSTS
-        value: tienda-virtual-5f6s.onrender.com
+        value: ".onrender.com"
 
 databases:
   - name: tienda-virtual-db
