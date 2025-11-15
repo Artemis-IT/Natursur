@@ -1,3 +1,10 @@
+# # *** ESTA ES LA PARTE IMPORTANTE ***
+# # Añadir la raíz del proyecto al PYTHONPATH
+# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.insert(0, PROJECT_ROOT)
+
+from tienda_virtual.home import send_mail
+
 #!/usr/bin/env python
 """Script para ejecutar la tarea diaria de envío de emails"""
 import os
@@ -14,13 +21,11 @@ sys.path.insert(0, BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tienda_virtual.settings')
 django.setup()
 
-# Importar la función
-from home.send_mail import send_daily_order_summary
 
 if __name__ == '__main__':
     try:
         print("Iniciando envío de resumen diario de pedidos...")
-        result = send_daily_order_summary()
+        result = send_mail.send_daily_order_summary()
         print(f"Tarea completada exitosamente: {result}")
     except Exception as e:
         print(f"Error al ejecutar tarea: {e}")
