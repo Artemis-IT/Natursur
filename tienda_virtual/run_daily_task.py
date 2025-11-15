@@ -1,7 +1,7 @@
-# *** ESTA ES LA PARTE IMPORTANTE ***
-# Añadir la raíz del proyecto al PYTHONPATH
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
+# # *** ESTA ES LA PARTE IMPORTANTE ***
+# # Añadir la raíz del proyecto al PYTHONPATH
+# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.insert(0, PROJECT_ROOT)
 
 from tienda_virtual.home.send_mail import send_daily_order_summary
 
