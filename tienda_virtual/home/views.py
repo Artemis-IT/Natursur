@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from .cart import Cart
 from django.db import transaction
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse
+import json
+from .send_sms import send_price_sms
 
 
 def index(request):
@@ -288,3 +292,63 @@ def orders_list(request):
         'site_name': 'Natursur',
     }
     return render(request, 'home/orders_list.html', context)
+
+
+@staff_member_required
+def manage_orders(request):
+    """Vista para que el superusuario gestione pedidos y envíe precios por SMS."""
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para acceder a esta sección.')
+        return redirect('home:index')
+    
+    # Obtener pedidos pendientes o en proceso
+    orders = Order.objects.filter(
+        status__in=['pending', 'processing']
+    ).order_by('-created_at')
+    
+    context = {
+        'orders': orders,
+        'site_name': 'Natursur',
+    }
+    return render(request, 'home/manage_orders.html', context)
+
+
+@staff_member_required
+def update_order_price(request, order_id):
+    """Envía SMS con el precio al cliente (sin guardar en BD)."""
+    if not request.user.is_superuser:
+        return JsonResponse({'success': False, 'error': 'Sin permisos'}, status=403)
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+    
+    try:
+        order = get_object_or_404(Order, id=order_id)
+        data = json.loads(request.body)
+        price = data.get('price')
+        
+        if not price:
+            return JsonResponse({'success': False, 'error': 'Precio requerido'}, status=400)
+        
+        # Enviar SMS usando función del módulo send_sms
+        success = send_price_sms(order, float(price))
+        
+        if success:
+            # Guardar en sesión que ya se envió (opcional)
+            if 'notified_orders' not in request.session:
+                request.session['notified_orders'] = []
+            request.session['notified_orders'].append(order_id)
+            request.session.modified = True
+            
+            return JsonResponse({
+                'success': True, 
+                'message': f'SMS enviado a {order.customer_phone} con precio {price}€'
+            })
+        else:
+            return JsonResponse({
+                'success': False, 
+                'error': 'Falló el envío de SMS'
+            }, status=500)
+            
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

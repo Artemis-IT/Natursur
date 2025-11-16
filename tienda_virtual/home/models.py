@@ -101,16 +101,15 @@ class OrderItem(models.Model):
 	product_name = models.CharField(max_length=255)
 	product_url = models.URLField(max_length=500)
 	created_at = models.DateTimeField(auto_now_add=True)
-	
+
 	class Meta:
 		verbose_name = 'Item de Pedido'
 		verbose_name_plural = 'Items de Pedido'
-	
+
 	def __str__(self):
 		return f"{self.quantity}x {self.product_name}"
-	
+
 	def save(self, *args, **kwargs):
-     
 		if not self.product_name:
 			self.product_name = self.product.name
 		if not self.product_url:

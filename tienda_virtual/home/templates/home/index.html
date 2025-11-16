@@ -26,6 +26,10 @@
                     <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
                     <a href="{% url 'home:citas_list' %}">Citas</a>
 
+                    {% if user.is_superuser %}
+                        <a href="{% url 'home:manage_orders' %}">📋 Gestionar Pedidos</a>
+                    {% endif %}
+
                     <span style="margin-left:1rem;color:rgba(255,255,255,0.95)">
                         {{ user.first_name }}
                     </span>
