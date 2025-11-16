@@ -1,0 +1,39 @@
+name: Deploy to Render on feat commits
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check commit message
+        id: check
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          if [[ "$COMMIT_MSG" =~ ^feat:.* ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "Commit message starts with 'feat:' - proceeding with deploy"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "Commit message doesn't start with 'feat:' - skipping deploy"
+          fi
+
+  deploy:
+    name: Deploy to Render
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      
+      - name: Deploy to Render
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
