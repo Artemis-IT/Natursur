@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Pedidos - {{ site_name }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+    <style>
+        .orders-table{width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin:2rem 0}
+        .orders-table th{background:#f8f9fa;padding:1rem;text-align:left;font-weight:600;border-bottom:2px solid #dee2e6}
+        .orders-table td{padding:1rem;border-bottom:1px solid #f0f0f0}
+        .order-row:hover{background:#f8f9fa}
+        .price-form{display:flex;gap:0.5rem;align-items:center}
+        .price-input{width:100px;padding:0.5rem;border:2px solid #ddd;border-radius:8px;font-size:1rem}
+        .btn-send{padding:0.5rem 1rem;background:#28a745;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+        .btn-send:hover{background:#218838}
+        .btn-send:disabled{background:#ccc;cursor:not-allowed}
+        .status-sent{background:#d4edda;color:#155724;padding:0.25rem 0.75rem;border-radius:12px;font-size:0.85rem}
+        .notification{position:fixed;top:20px;right:20px;padding:1rem 1.5rem;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;animation:slideIn 0.3s}
+        .notification.success{background:#d4edda;color:#155724;border-left:4px solid #28a745}
+        .notification.error{background:#f8d7da;color:#721c24;border-left:4px solid #dc3545}
+        @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700">NS</div>
+                <h1 class="logo">{{ site_name }}</h1>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'home:index' %}">Inicio</a>
+                <a href="{% url 'home:logout' %}">Cerrar sesión</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" style="padding:3rem 0;min-height:auto;background:linear-gradient(120deg, rgba(42,157,143,0.15), rgba(35,122,106,0.1))">
+        <div class="container inner">
+            <div style="max-width:700px;margin:0 auto;text-align:center">
+                <h2 class="tagline" style="font-size:2rem;color:#1a5f52">📋 Gestión de Pedidos</h2>
+                <p class="lead" style="color:#237a6a">Calcula precios y envía confirmación por SMS</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="container main-content">
+        {% if orders %}
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Productos</th>
+                    <th>Unidades</th>
+                    <th>Fecha</th>
+                    <th>Precio & SMS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="order-row">
+                    <td><strong>#{{ order.id }}</strong></td>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.customer_phone|default:"Sin teléfono" }}</td>
+                    <td>{{ order.items.count }}</td>
+                    <td>{{ order.get_total_items }}</td>
+                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <form class="price-form" onsubmit="sendPrice(event, '{{ order.id }}')">
+                            {% csrf_token %}
+                            <input type="number" step="0.01" min="0" class="price-input" placeholder="€" required id="price-{{ order.id }}" {% if not order.customer_phone %}disabled{% endif %}>
+                            <button type="submit" class="btn-send" id="btn-{{ order.id }}" {% if not order.customer_phone %}disabled{% endif %}>📱 Enviar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="card" style="text-align:center;padding:3rem">
+            <h3>No hay pedidos pendientes</h3>
+            <p>Cuando lleguen nuevos pedidos aparecerán aquí</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ site_name }} - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        function showNotification(msg,type){
+            const n=document.createElement('div');
+            n.className=`notification ${type}`;
+            n.textContent=msg;
+            document.body.appendChild(n);
+            setTimeout(()=>{n.style.animation='slideIn 0.3s reverse';setTimeout(()=>n.remove(),300)},3000);
+        }
+        async function sendPrice(e,id){
+            e.preventDefault();
+            const inp=document.getElementById(`price-${id}`);
+            const btn=document.getElementById(`btn-${id}`);
+            const price=inp.value;
+            if(!price||price<=0){showNotification('Precio inválido','error');return}
+            btn.disabled=true;
+            btn.textContent='⏳';
+            try{
+                const r=await fetch(`/admin/pedido/${id}/precio/`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json','X-CSRFToken':'{{csrf_token}}'},
+                    body:JSON.stringify({price:price})
+                });
+                const d=await r.json();
+                if(d.success){
+                    showNotification(d.message,'success');
+                    inp.disabled=true;
+                    btn.textContent='✓';
+                    btn.style.background='#28a745';
+                    btn.closest('form').innerHTML=`<span class="status-sent">✓ Enviado (${price}€)</span>`;
+                }else{
+                    showNotification(d.error||'Error','error');
+                    btn.disabled=false;
+                    btn.textContent='📱 Enviar';
+                }
+            }catch(err){
+                showNotification('Error de conexión','error');
+                btn.disabled=false;
+                btn.textContent='📱 Enviar';
+            }
+        }
+    </script>
+</body>
+</html>
