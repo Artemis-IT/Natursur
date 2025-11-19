@@ -52,7 +52,7 @@ python manage.py runserver
 
 **Acceder a:** http://127.0.0.1:8000/
 
-📖 **Instrucciones detalladas:** Ver [SETUP.md](./SETUP.md)
+📖 **Documentación completa:** Ver [docs/README.md](./docs/README.md)
 
 ---
 
@@ -349,6 +349,25 @@ python manage.py migrate
 
 ---
 
+## 📚 Documentación
+
+La documentación completa del proyecto está organizada en la carpeta `docs/`:
+
+- **[Configuración y Setup](./docs/setup/)** - Instalación, despliegue y configuración
+- **[Guías de Uso](./docs/guias/)** - Comandos rápidos y referencias
+- **[Desarrollo](./docs/desarrollo/)** - Documentación técnica
+- **[Equipo](./docs/equipo/)** - Información del equipo y presentaciones
+
+### 🔗 Enlaces Rápidos
+
+- [Instalación Inicial](./docs/setup/SETUP.md)
+- [Despliegue en Render](./docs/setup/RENDER_DESPLIEGUE.md)
+- [Configuración Twilio (SMS)](./docs/setup/TWILIO_CONFIGURACION.md)
+- [Configuración Email](./docs/setup/EMAIL_CONFIGURACION.md)
+- [Comandos Rápidos](./docs/guias/COMANDOS_RAPIDOS.md)
+
+---
+
 ## 📄 Licencia
 
 Proyecto educativo PGPI 2024
@@ -367,9 +386,10 @@ Proyecto educativo PGPI 2024
 ## 📞 Soporte
 
 Para problemas o preguntas:
-1. Revisar [SETUP.md](./SETUP.md)
-2. Consultar Issues en GitHub
-3. Contactar al equipo de desarrollo
+1. Revisar la [documentación completa](./docs/README.md)
+2. Consultar guías específicas en [docs/](./docs/)
+3. Revisar Issues en GitHub
+4. Contactar al equipo de desarrollo
 
 ---
 
