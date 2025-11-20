@@ -46,7 +46,7 @@
             <nav class="nav">
                 <a href="{% url 'home:index' %}">Inicio</a>
                 <a href="{% url 'home:products_list' %}">Productos</a>
-                <a href="{% url 'home:cart_detail' %}">🛒 Carrito</a>
+                <a href="{% url 'home:cart_detail' %}">🛒 Carrito ({{ cart|length }})</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
                     <a href="{% url 'home:citas_list' %}">Citas</a>
