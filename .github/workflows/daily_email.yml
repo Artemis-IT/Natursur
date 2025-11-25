@@ -2,7 +2,8 @@ name: Enviar resumen diario de pedidos
 
 on:
   schedule:
-    - cron: '59 22 * * *'  # 22:59 UTC = 23:59 España (invierno)
+    - cron: '59 23 * * *'
+      timezone: 'Europe/Madrid'
   
   # Permite ejecutar manualmente
   workflow_dispatch:

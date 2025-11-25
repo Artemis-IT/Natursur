@@ -35,9 +35,33 @@
         .summary-row{display:flex;justify-content:space-between;padding:0.75rem 0;font-size:1.1rem}
         .summary-row.total{border-top:2px solid #dee2e6;margin-top:0.5rem;padding-top:1rem;font-weight:700;font-size:1.3rem;color:var(--accent)}
         .order-actions{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+        .btn-repeat{padding:0.75rem 1.5rem;background:#17a2b8;color:#fff;border:none;border-radius:25px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
+        .btn-repeat:hover{background:#138496}
+        
+        /* Modal styles */
+        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .modal-content{background:#fff;border-radius:16px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:slideIn 0.3s}
+        @keyframes slideIn{from{transform:translateY(-50px);opacity:0}to{transform:translateY(0);opacity:1}}
+        .modal-header{padding:1.5rem;border-bottom:2px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+        .modal-header h2{margin:0;color:#333;font-size:1.5rem}
+        .modal-close{background:none;border:none;font-size:2rem;cursor:pointer;color:#999;line-height:1}
+        .modal-close:hover{color:#333}
+        .modal-body{padding:1.5rem}
+        .modal-item{display:flex;gap:1rem;padding:1rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.75rem;align-items:center}
+        .modal-item-icon{width:50px;height:50px;background:#e0ffe5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+        .modal-item-info{flex:1}
+        .modal-item-name{font-weight:600;color:#333;margin-bottom:0.25rem}
+        .modal-item-quantity{color:#666;font-size:0.9rem}
+        .modal-footer{padding:1.5rem;border-top:2px solid #f0f0f0;display:flex;gap:1rem;justify-content:flex-end}
+        .modal-summary{background:#e7f9f5;padding:1rem;border-radius:8px;margin-bottom:1rem;text-align:center}
+        .modal-summary strong{color:#28a745;font-size:1.2rem}
+        
         @media (max-width:768px){
             .order-item{flex-direction:column;text-align:center}
             .item-quantity{text-align:center}
+            .order-actions{flex-direction:column}
+            .modal-content{width:95%;max-height:90vh}
         }
     </style>
 </head>
@@ -170,8 +194,49 @@
         </div>
 
         <div class="order-actions">
-            <a href="{% url 'home:orders_list' %}" class="cta">← Ver todos mis pedidos</a>
+            <a href="{% url 'home:orders_list' %}" class="btn primary">← Ver todos mis pedidos</a>
+            <button class="btn-repeat" onclick="showRepeatModal()">🔄 Repetir este pedido</button>
             <a href="{% url 'home:products_list' %}" class="cta">Seguir comprando →</a>
+        </div>
+    </div>
+
+    <!-- Modal para repetir pedido -->
+    <div id="repeat-modal" class="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔄 Repetir Pedido #{{ order.id }}</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-summary">
+                    <p style="margin:0 0 0.5rem;color:#666">Se añadirán al carrito:</p>
+                    <strong>{{ order.items.count }} producto(s) diferente(s)</strong>
+                    <p style="margin:0.5rem 0 0;color:#666">Total: {{ order.get_total_items }} unidades</p>
+                </div>
+                
+                <div style="margin-bottom:1rem">
+                    <strong>📋 Detalle del pedido original:</strong>
+                    <p style="color:#666;font-size:0.9rem;margin:0.5rem 0">Realizado el {{ order.created_at|date:"d/m/Y" }}</p>
+                </div>
+                
+                {% for item in order.items.all %}
+                <div class="modal-item">
+                    <div class="modal-item-icon">🌱</div>
+                    <div class="modal-item-info">
+                        <div class="modal-item-name">{{ item.product_name }}</div>
+                        <div class="modal-item-quantity">Cantidad: {{ item.quantity }} unidad(es)</div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <p style="color:#666;font-size:0.9rem;margin-top:1rem;padding:1rem;background:#fff3cd;border-radius:8px">
+                    ℹ️ Los productos se añadirán a tu carrito actual. Podrás modificar las cantidades antes de confirmar el nuevo pedido.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn primary" onclick="closeModal()">Cancelar</button>
+                <a href="{% url 'home:repeat_order' order.id %}" class="cta">Confirmar y añadir al carrito</a>
+            </div>
         </div>
     </div>
 
@@ -180,5 +245,24 @@
             <p>&copy; {{ site_name }} - Todos los derechos reservados</p>
         </div>
     </footer>
+
+    <script>
+        function showRepeatModal() {
+            document.getElementById('repeat-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            document.getElementById('repeat-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>

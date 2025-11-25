@@ -16,6 +16,27 @@
         .search-btn{padding:0.75rem 2rem;background:#237a6a;color:#fff;border:none;border-radius:25px;cursor:pointer;font-weight:600}
         .search-btn:hover{background:#1a5f52}
         .products-info{text-align:center;padding:1.5rem;color:#666}
+        
+        /* Sección de recomendaciones */
+        .recommendations-section{background:linear-gradient(135deg,#f8f9fa,#e9ecef);padding:3rem 2rem;margin:2rem auto;max-width:1200px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+        .recommendations-header{text-align:center;margin-bottom:2.5rem}
+        .recommendations-header h2{color:#28a745;font-size:2rem;margin:0 0 0.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+        .recommendations-header p{color:#666;font-size:1rem;margin:0}
+        .recommendations-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:900px;margin:0 auto;justify-items:center}
+        .recommendation-card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.3s,box-shadow 0.3s;border:2px solid #28a745;width:100%;max-width:320px;display:flex;flex-direction:column}
+        .recommendation-card:hover{transform:translateY(-5px);box-shadow:0 6px 20px rgba(40,167,69,0.3)}
+        .recommendation-badge{background:#28a745;color:#fff;padding:0.3rem 0.85rem;border-radius:20px;font-size:0.75rem;font-weight:600;display:inline-block;margin-bottom:1rem;text-align:center}
+        .recommendation-stats{background:#f8f9fa;padding:0.85rem;border-radius:8px;margin-bottom:1rem;font-size:0.85rem}
+        .recommendation-stats div{display:flex;justify-content:space-between;margin-bottom:0.3rem;align-items:center}
+        .recommendation-stats div:last-child{margin-bottom:0}
+        .recommendation-stats strong{color:#28a745;font-weight:700}
+        .recommendation-name{font-size:1.05rem;font-weight:600;color:#333;margin:0 0 1.2rem;min-height:2.5em;line-height:1.3;text-align:center;flex-grow:1}
+        .recommendation-actions{display:flex;flex-direction:column;gap:0.6rem;margin-top:auto}
+        .recommendation-actions .add-form{display:flex;gap:0.5rem;align-items:stretch}
+        .recommendation-actions .btn-add{flex:1;padding:0.75rem 1rem;background:#28a745;color:#fff;border:none;border-radius:25px;font-weight:600;cursor:pointer;font-size:0.95rem}
+        .recommendation-actions .btn-add:hover{background:#218838}
+        .recommendation-actions .btn.primary{padding:0.75rem 1rem;text-align:center;font-size:0.95rem;border-radius:25px}
+        
         .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;padding:2rem;max-width:1400px;margin:0 auto}
         .product-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);overflow:hidden;transition:transform 0.3s}
         .product-card:hover{transform:translateY(-5px);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
@@ -29,10 +50,16 @@
         .btn-add{flex:1;padding:0.75rem 1.5rem;background:#28a745;color:#fff;border:none;border-radius:25px;font-weight:600;cursor:pointer}
         .btn-add:hover{background:#218838}
         .no-products{text-align:center;padding:4rem 2rem;color:#666}
+        
+        .section-divider{text-align:center;padding:2rem;max-width:1400px;margin:0 auto}
+        .section-divider h3{color:#333;font-size:1.8rem;margin:0 0 0.5rem}
+        .section-divider p{color:#666;margin:0}
+        
         @media (max-width:768px){
-            .products-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;padding:1.5rem}
+            .products-grid,.recommendations-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;padding:1.5rem}
             .products-header h1{font-size:2rem}
             .search-container{flex-direction:column}
+            .recommendations-section{padding:1.5rem;margin:1.5rem 1rem}
         }
     </style>
 </head>
@@ -46,7 +73,7 @@
             <nav class="nav">
                 <a href="{% url 'home:index' %}">Inicio</a>
                 <a href="{% url 'home:products_list' %}">Productos</a>
-                <a href="{% url 'home:cart_detail' %}">🛒 Carrito ({{ cart|length }})</a>
+                <a href="{% url 'home:cart_detail' %}">🛒 Carrito</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'home:orders_list' %}">Mis Pedidos</a>
                     <a href="{% url 'home:citas_list' %}">Citas</a>
@@ -79,6 +106,56 @@
             <button type="submit" class="search-btn">Buscar</button>
         </form>
     </div>
+    
+    <!-- Sección de Recomendaciones -->
+    {% if recommended_products %}
+    <div class="recommendations-section">
+        <div class="recommendations-header">
+            <h2>⭐ Tus Productos Favoritos</h2>
+            <p>Basado en tu historial de pedidos - Los que más has pedido</p>
+        </div>
+        
+        <div class="recommendations-grid">
+            {% for rec in recommended_products %}
+            <div class="recommendation-card">
+                <span class="recommendation-badge">⭐ MÁS PEDIDO</span>
+                
+                <div class="recommendation-stats">
+                    <div>
+                        <span>Total pedido:</span>
+                        <strong>{{ rec.total_quantity }} unidades</strong>
+                    </div>
+                    <div>
+                        <span>Veces ordenado:</span>
+                        <strong>{{ rec.times_ordered }} vez/veces</strong>
+                    </div>
+                </div>
+                
+                <h3 class="recommendation-name">{{ rec.product.name }}</h3>
+                
+                <div class="recommendation-actions">
+                    <form method="post" action="{% url 'home:cart_add' rec.product.id %}" class="add-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
+                        <button type="submit" class="btn-add">🛒 Añadir</button>
+                    </form>
+                    
+                    <a href="{{ rec.product.herbalife_url }}" target="_blank" rel="noopener noreferrer" class="btn primary" style="text-align:center">Ver detalles →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Separador -->
+    {% if recommended_products %}
+    <div class="section-divider">
+        <h3>📦 Catálogo Completo</h3>
+        <p>Explora todos nuestros productos disponibles</p>
+    </div>
+    {% endif %}
     
     <div class="products-info">
         {% if search_query %}

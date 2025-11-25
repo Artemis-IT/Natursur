@@ -11,6 +11,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 import json
 from .send_sms import send_price_sms
+from django.db.models import Sum, Count
 
 
 def index(request):
@@ -305,7 +306,6 @@ def get_user_recommended_products(user, limit=6):
     Obtiene los productos más pedidos por el usuario.
     Retorna una lista de diccionarios con producto y cantidad total pedida.
     """
-    # Agrupar por producto y contar cantidades totales
     most_ordered = OrderItem.objects.filter(
         order__user=user
     ).values(
@@ -318,7 +318,6 @@ def get_user_recommended_products(user, limit=6):
         times_ordered=Count('id')
     ).order_by('-total_quantity')[:limit]
     
-    # Convertir a lista con objetos Product completos
     recommended = []
     for item in most_ordered:
         try:
