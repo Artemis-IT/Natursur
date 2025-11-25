@@ -147,13 +147,19 @@ def products_list(request):
     # Obtener categorías únicas para el filtro
     categories = Product.objects.filter(is_active=True).values_list('category', flat=True).distinct()
     
+    # Obtener productos más pedidos por el usuario (si está autenticado)
+    recommended_products = []
+    if request.user.is_authenticated:
+        recommended_products = get_user_recommended_products(request.user, limit=6)
+    
     context = {
         'products': products,
         'search_query': search_query,
         'selected_category': category,
         'categories': [cat for cat in categories if cat],
         'site_name': 'Natursur',
-        'total_products': products.count()
+        'total_products': products.count(),
+        'recommended_products': recommended_products,
     }
     return render(request, 'home/products.html', context)
 
@@ -293,6 +299,67 @@ def orders_list(request):
     }
     return render(request, 'home/orders_list.html', context)
 
+
+def get_user_recommended_products(user, limit=6):
+    """
+    Obtiene los productos más pedidos por el usuario.
+    Retorna una lista de diccionarios con producto y cantidad total pedida.
+    """
+    # Agrupar por producto y contar cantidades totales
+    most_ordered = OrderItem.objects.filter(
+        order__user=user
+    ).values(
+        'product__id',
+        'product__name',
+        'product__image_url',
+        'product__herbalife_url'
+    ).annotate(
+        total_quantity=Sum('quantity'),
+        times_ordered=Count('id')
+    ).order_by('-total_quantity')[:limit]
+    
+    # Convertir a lista con objetos Product completos
+    recommended = []
+    for item in most_ordered:
+        try:
+            product = Product.objects.get(id=item['product__id'])
+            recommended.append({
+                'product': product,
+                'total_quantity': item['total_quantity'],
+                'times_ordered': item['times_ordered']
+            })
+        except Product.DoesNotExist:
+            continue
+    
+    return recommended
+
+
+@login_required(login_url='home:login')
+def repeat_order(request, order_id):
+    """Añade todos los productos de un pedido anterior al carrito."""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    cart = Cart(request)
+    
+    # Añadir cada item del pedido al carrito
+    items_added = 0
+    for item in order.items.all():
+        try:
+            # Verificar que el producto siga activo
+            if item.product.is_active:
+                cart.add(product=item.product, quantity=item.quantity)
+                items_added += 1
+        except Exception as e:
+            messages.warning(request, f'No se pudo añadir "{item.product_name}": {str(e)}')
+    
+    if items_added > 0:
+        messages.success(
+            request, 
+            f'¡Pedido repetido! Se añadieron {items_added} productos al carrito.'
+        )
+    else:
+        messages.warning(request, 'No se pudo añadir ningún producto del pedido.')
+    
+    return redirect('home:cart_detail')
 
 @staff_member_required
 def manage_orders(request):

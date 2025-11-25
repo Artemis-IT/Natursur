@@ -17,6 +17,7 @@ urlpatterns = [
     path('carrito/actualizar/', views.cart_update, name='cart_update'),
     path('checkout/', views.checkout, name='checkout'),
     path('pedidos/', views.orders_list, name='orders_list'),
+    path('pedidos/<int:order_id>/repetir/', views.repeat_order, name='repeat_order'),
     path('pedidos/<int:order_id>/', views.order_detail, name='order_detail'),
     path('admin/gestionar-pedidos/', views.manage_orders, name='manage_orders'),
     path('admin/pedido/<int:order_id>/precio/', views.update_order_price, name='update_order_price'),
