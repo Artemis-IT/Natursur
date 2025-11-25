@@ -10,6 +10,7 @@ on:
 jobs:
   send-emails:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # Timeout de 10 minutos
     
     steps:
       - name: Checkout código
@@ -46,15 +47,12 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_USE_TLS: 'True'
-        working-directory: ./   # fuerza a ejecutar desde la raíz del repo
+        working-directory: ./tienda_virtual
         run: |
-          python tienda_virtual/run_daily_task.py
+          echo "Ejecutando tarea de envío de emails..."
+          python run_daily_task.py
+          echo "Tarea completada"
       
       - name: Resultado
         if: always()
-        run: |
-          if [ $? -eq 0 ]; then
-            echo "Email enviado correctamente"
-          else
-            echo "Hubo un error al enviar el email"
-          fi
+        run: echo "Workflow completado"
